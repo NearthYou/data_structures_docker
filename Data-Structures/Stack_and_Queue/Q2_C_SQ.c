@@ -8,6 +8,7 @@ Purpose: Implementing the required functions for Question 2 */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MIN_INT -1000
 //////////////////////////////////////////////////////////////////////////////////
@@ -113,12 +114,39 @@ int main()
 
 void createStackFromLinkedList(LinkedList *ll, Stack *s)
 {
-    /* add your code here */
+    if (ll == NULL || ll->head == NULL)
+		return;
+
+	if(!isEmptyStack(s))
+		removeAllItemsFromStack(s);
+	
+	ListNode *cur = ll->head;
+
+	while(cur != NULL)
+	{
+		push(s, cur->item);
+		cur = cur->next;
+	}
 }
 
 void removeEvenValues(Stack *s)
 {
-	/* add your code here */
+    if (isEmptyStack(s))
+        return;
+
+    Stack temp;
+    temp.ll.size = 0;
+    temp.ll.head = NULL; 
+
+    while (!isEmptyStack(s))
+    {
+        int num = pop(s);
+        if (num % 2 != 0)
+            push(&temp, num);
+    }
+
+    while (!isEmptyStack(&temp))
+        push(s, pop(&temp));
 }
 
 //////////////////////////////////////////////////////////////////////////////////

@@ -112,7 +112,25 @@ int main()
 
 void reverse(Queue *q)
 {
-/* add your code here */
+	if (isEmptyQueue(q))
+        return;
+
+    Stack temp;
+    temp.ll.size = 0;
+    temp.ll.head = NULL; 
+	int size =q->ll.size;
+
+	for (int i = 0; i < size; i++)
+	{
+		int num = dequeue(q);
+		push(&temp, num);
+	}
+
+	for (int j = 0; j < size; j++)
+	{
+		int num = pop(&temp);
+		enqueue(q, num);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

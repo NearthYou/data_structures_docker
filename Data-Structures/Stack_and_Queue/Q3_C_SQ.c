@@ -103,7 +103,24 @@ int main()
 
 int isStackPairwiseConsecutive(Stack *s)
 {
-  /* add your code here */
+	// 스택 안의 숫자들이 두 개씩 짝을 지었을 때 서로 연속된 수인지?
+	// cur, next 두 개 비교 해서 연속인지 확인
+	// index 반으로 나눠서 검사
+
+	int size = s->ll.size;
+	if (size % 2 != 0)
+		return 0;
+	int cur = 0, next = 0;
+
+	for (int i = 0; i < size / 2; i++)
+	{
+		cur = pop(s);
+		next = pop(s);
+
+		if(abs(cur - next) != 1)
+			return 0;
+	}
+	return 1;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
