@@ -103,7 +103,32 @@ int main()
 
 void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2)
 {
-    /* add your code here */
+    /*
+		첫번째 리스트의 개수만큼, 두번째 리스트랑 함께 순회하면서 요소 삽입
+		-> 첫번째 리스트가 두번째리스트보다 크거나 같다면 결국엔 두번째 리스트에는 빈값만 남아야 함
+	*/
+
+	if (ll1 == NULL || ll2 == NULL)
+		return;
+
+	ListNode *cur1 = ll1->head, *cur2 = ll2->head;
+	int index = 0;
+
+	if (cur1 == NULL || cur2 == NULL)
+		return;
+	
+	while(cur1 != NULL && cur2 != NULL && index < ll1->size)
+	{
+		insertNode(ll1, index + 1, cur2->item);
+		cur1 = cur1->next;
+		cur2 = cur2->next;
+		index += 2;
+	}
+
+	index = 0;
+	int bound = ll1->size < ll2->size ? ll2->size - ll1->size : ll1->size - ll2->size;
+	while(index++ <= bound)
+		removeNode(ll2,0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

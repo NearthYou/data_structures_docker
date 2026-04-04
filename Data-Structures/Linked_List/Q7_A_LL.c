@@ -87,7 +87,22 @@ int main()
 
 void RecursiveReverse(ListNode **ptrHead)
 {
-	/* add your code here */
+	// 재귀적으로 뒤집는다는게 뭔 소릴까
+	// next 포인터와 head 포인터를 바꾸는 방식으로 주어진 연결리스트를 뒤집는다.
+
+    if (*ptrHead == NULL || (*ptrHead)->next == NULL)
+        return;
+
+    ListNode *cur = *ptrHead;
+    ListNode *next = cur->next;
+
+    RecursiveReverse(&next);
+
+    next->next = cur;
+    cur->next = NULL;
+
+    // 시작점
+	*ptrHead = next;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

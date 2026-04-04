@@ -88,7 +88,34 @@ int main()
 
 int moveMaxToFront(ListNode **ptrHead)
 {
-    /* add your code here */
+    // 가장 큰 값을 맨 앞으로 이동
+	
+	// ptrHead가 널 값인지 확인
+	if (*ptrHead == NULL)
+		return -1;
+
+	ListNode *cur = *ptrHead, *target = NULL, *prev = NULL;
+	// head를 가지고 다음 값 순회하면서 더 큰 값 찾기
+	while(cur->next != NULL)
+	{
+		int cur_val = cur->item;
+		int next_val = cur->next->item;
+		if (cur_val < next_val)
+		{
+			target = cur->next;
+			prev = cur;
+		}
+		cur = cur->next;
+	}
+
+	// 단순히 값을 바꾸는게 아니라 그 부분만 떼와서 연결
+	prev->next = target->next != NULL ? target->next : NULL;
+
+	ListNode *temp = *ptrHead;
+	*ptrHead = target;
+	(*ptrHead)->next = temp;
+
+	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

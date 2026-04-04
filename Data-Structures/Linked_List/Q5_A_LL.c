@@ -58,9 +58,10 @@ int main()
 	printf("2: Split the linked list into two linked lists, frontList and backList:\n");
 	printf("0: Quit:\n");
 
+	c = 1;
 	while (c != 0)
 	{
-	    printf("Please input your choice(1/2/0): ");
+		printf("Please input your choice(1/2/0): ");
 		scanf("%d", &c);
 
 		switch (c)
@@ -102,7 +103,34 @@ int main()
 
 void frontBackSplitLinkedList(LinkedList *ll, LinkedList *resultFrontList, LinkedList *resultBackList)
 {
-	/* add your code here */
+	if (ll == NULL || ll->head == NULL)
+		return;
+
+	if (ll->size == 1)
+	{
+		insertNode(resultFrontList, 0, ll->head->item);
+		return;
+	}
+
+	//가운데 인덱스 구한다음에 0~인덱스 리스트 생성
+	ListNode *cur = ll->head;
+	int mid = ll->size / 2 + 1;
+	int end = ll->size;
+	
+	for (int i = 0; i < mid; i++)
+	{
+		insertNode(resultFrontList, i, cur->item);
+		cur = cur->next;
+	}
+	
+	//인덱스 ~ 사이즈까지 리스트 생성
+	int idx = 0;
+	for (int j = mid; j < end; j++)
+	{
+		insertNode(resultBackList, idx, cur->item);
+		cur = cur->next;
+		idx++;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

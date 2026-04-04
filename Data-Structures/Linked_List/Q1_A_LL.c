@@ -90,7 +90,41 @@ int main()
 
 int insertSortedLL(LinkedList *ll, int item)
 {
-	/* add your code here */
+	/* 
+	C 함수 insertSortedLL()을 작성하시오. 이 함수는 정수 하나를 받아 연결 리스트에 오름차순으로 삽입한다.
+	insertSortedLL()는 현재 연결 리스트에 이미 존재하는 정수는 삽입하면 안 된다.
+	새 항목이 추가된 인덱스 위치를 반환해야 하며, 작업을 성공적으로 완료하지 못한 경우에는 -1을 반환해야 한다.
+	연결 리스트는 정렬된 연결 리스트이거나 빈 리스트라고 가정해도 된다
+	*/
+	
+	ListNode *cur;
+	int index = 0;
+	
+	if (ll == NULL)
+		return -1;
+	
+	cur = ll->head;
+
+	if (cur == NULL) {
+		insertNode(ll, index, item);
+		return 0;
+	}
+	
+	// 머리부터 순회하면서 item 보다 같거나 큰 값이 나타나면 insertNode 호출
+	while (cur != NULL)
+	{
+		if (cur-> item == item) // 이미 존재하는 정수
+			return -1;
+		else if (cur->item >= item) // 넣으려는 값이 현재 값보다 작거나 같을 경우 그 위치에 삽입
+		{
+			insertNode(ll, index, item);
+			return index;
+		}
+		cur = cur->next;
+		index++;
+	}
+
+	insertNode(ll, index, item);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +174,7 @@ ListNode *findNode(LinkedList *ll, int index){
 	if (temp == NULL || index < 0)
 		return NULL;
 
-	while (index > 0){
+	while (index > 0) {
 		temp = temp->next;
 		if (temp == NULL)
 			return NULL;
