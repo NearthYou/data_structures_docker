@@ -94,15 +94,15 @@ void RecursiveReverse(ListNode **ptrHead)
         return;
 
     ListNode *cur = *ptrHead;
-    ListNode *next = cur->next;
+    ListNode *nxt = cur->next;
 
-    RecursiveReverse(&next);
+    RecursiveReverse(&nxt);
 
-    next->next = cur;
+    nxt->next = cur;
     cur->next = NULL;
 
     // 시작점
-	*ptrHead = next;
+	*ptrHead = nxt;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
