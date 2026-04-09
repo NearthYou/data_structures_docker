@@ -100,9 +100,21 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 현재 노드 기준으로 3세대 아래에 있는 증손 노드를 갖고 있는 노드를 출력
 int hasGreatGrandchild(BTNode *node)
 {
-	/* add your code here */
+    if (node == NULL)
+        return -1;
+
+    int left = hasGreatGrandchild(node->left);
+    int right = hasGreatGrandchild(node->right);
+
+    int height = (left > right ? left : right) + 1;
+
+    if (height == 3)
+        printf("%d\n", node->item);
+    
+    return height;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

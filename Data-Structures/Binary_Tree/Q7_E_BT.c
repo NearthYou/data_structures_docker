@@ -8,7 +8,8 @@ Purpose: Implementing the required functions for Question 7 */
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <limits.h>
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 //////////////////////////////////////////////////////////////////////////////////
 
 typedef struct _btnode
@@ -102,7 +103,14 @@ int main()
 
 int smallestValue(BTNode *node)
 {
-	/* add your code here */
+	if (node == NULL)
+        return INT_MAX;
+    
+    int left = smallestValue(node->left);
+    int right = smallestValue(node->right);
+    int smallest = MIN(node->item, MIN(left, right));
+
+    return smallest;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

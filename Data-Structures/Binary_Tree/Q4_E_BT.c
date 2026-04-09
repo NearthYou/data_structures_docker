@@ -100,10 +100,15 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 트리 안의 홀수 값만 모두 더한 합을 반환하는 재귀 함수
 int sumOfOddNodes(BTNode *node)
-
 {
-    /* add your code here */
+    if (node == NULL)
+        return 0;
+    
+    int sum = (node->item % 2 != 0) ? node->item : 0;
+    
+    return sum + sumOfOddNodes(node->left) + sumOfOddNodes(node->right);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

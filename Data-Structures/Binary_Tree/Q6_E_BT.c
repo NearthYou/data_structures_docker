@@ -103,9 +103,17 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 트리 안에 저장된 값 중 m보다 작은 모든 정수를 출력하는 함수
 void printSmallerValues(BTNode *node, int m)
 {
-	/* add your code here */
+    if(node == NULL)
+        return;
+    
+    if(node->item < m)
+        printf("%d ", node->item);
+    
+    printSmallerValues(node->left, m);
+    printSmallerValues(node->right, m);
 }
 
 //////////////////////////////////////////////////////////////////////////////////

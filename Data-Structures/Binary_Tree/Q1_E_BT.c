@@ -35,7 +35,7 @@ int identical(BTNode *tree1, BTNode *tree2);
 BTNode* createBTNode(int item);
 
 BTNode* createTree();
-void push( Stack *stk, BTNode *node);
+void push(Stack *stk, BTNode *node);
 BTNode* pop(Stack *stk);
 
 void printTree(BTNode *node);
@@ -61,45 +61,43 @@ int main()
     while(c != 0){
         printf("Please input your choice(1/2/3/0): ");
         if(scanf("%d", &c) > 0)
-
         {
-
             switch(c)
             {
-            case 1:
-                removeAll(&root1);
-                printf("Creating tree1:\n");
-                root1 = createTree();
-                printf("The resulting tree1 is: ");
-                printTree(root1);
-                printf("\n");
-                break;
-            case 2:
-                removeAll(&root2);
-                printf("Creating tree2:\n");
-                root2 = createTree();
-                printf("The resulting tree2 is: ");
-                printTree(root2);
-                printf("\n");
-                break;
-            case 3:
-                s = identical(root1, root2);
-                if(s){
-                printf("Both trees are structurally identical.\n");
-                }
-                else{
-                printf("Both trees are different.\n");
-                }
-                removeAll(&root1);
-                removeAll(&root2);
-                break;
-            case 0:
-                removeAll(&root1);
-                removeAll(&root2);
-                break;
-            default:
-                printf("Choice unknown;\n");
-                break;
+                case 1:
+                    removeAll(&root1);
+                    printf("Creating tree1:\n");
+                    root1 = createTree();
+                    printf("The resulting tree1 is: ");
+                    printTree(root1);
+                    printf("\n");
+                    break;
+                case 2:
+                    removeAll(&root2);
+                    printf("Creating tree2:\n");
+                    root2 = createTree();
+                    printf("The resulting tree2 is: ");
+                    printTree(root2);
+                    printf("\n");
+                    break;
+                case 3:
+                    s = identical(root1, root2);
+                    if(s){
+                    printf("Both trees are structurally identical.\n");
+                    }
+                    else{
+                    printf("Both trees are different.\n");
+                    }
+                    removeAll(&root1);
+                    removeAll(&root2);
+                    break;
+                case 0:
+                    removeAll(&root1);
+                    removeAll(&root2);
+                    break;
+                default:
+                    printf("Choice unknown;\n");
+                    break;
             }
 		}
         else
@@ -114,14 +112,25 @@ int main()
 //////////////////////////////////////////////////////////////////////////////////
 
 int identical(BTNode *tree1, BTNode *tree2)
-
 {
-   /* add your code here */
+    if (tree1 == NULL && tree2 == NULL)
+        return 1;
+    
+    if(tree1 == NULL || tree2 == NULL)
+        return 0;
+    
+    // 현재 노드 값이 같아야하고, 왼쪽/오른쪽 서브트리도 동일해야 한다.
+    // 즉 값도 같고 배치 방식도 같아야 한다.
+    
+    if(tree1->item == tree2->item)
+        return identical(tree1->left, tree2->left) && identical(tree1->right, tree2->right);
+    else
+        return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
 
-BTNode *createBTNode(int item){
+BTNode *createBTNode(int item) {
     BTNode *newNode = malloc(sizeof(BTNode));
     newNode->item = item;
     newNode->left = NULL;
@@ -151,42 +160,41 @@ BTNode *createTree()
     }
     else
     {
-        scanf("%c",&s);
+        scanf("%c", &s);
     }
 
-    while((temp =pop(&stk)) != NULL)
+    while((temp = pop(&stk)) != NULL)
     {
-
         printf("Enter an integer value for the Left child of %d: ", temp->item);
 
-        if(scanf("%d",&item)> 0)
+        if(scanf("%d", &item) > 0)
         {
             temp->left = createBTNode(item);
         }
         else
         {
-            scanf("%c",&s);
+            scanf("%c", &s);
         }
 
         printf("Enter an integer value for the Right child of %d: ", temp->item);
-        if(scanf("%d",&item)>0)
+        if(scanf("%d", &item) > 0)
         {
             temp->right = createBTNode(item);
         }
         else
         {
-            scanf("%c",&s);
+            scanf("%c", &s);
         }
 
         if(temp->right != NULL)
-            push(&stk,temp->right);
+            push(&stk, temp->right);
         if(temp->left != NULL)
-            push(&stk,temp->left);
+            push(&stk, temp->left);
     }
     return root;
 }
 
-void push( Stack *stk, BTNode *node){
+void push(Stack *stk, BTNode *node) {
     StackNode *temp;
 
     temp = malloc(sizeof(StackNode));
@@ -203,7 +211,7 @@ void push( Stack *stk, BTNode *node){
     }
 }
 
-BTNode* pop(Stack *stk){
+BTNode* pop(Stack *stk) {
    StackNode *temp, *top;
    BTNode *ptr;
    ptr = NULL;

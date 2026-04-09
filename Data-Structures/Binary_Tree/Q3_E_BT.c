@@ -98,10 +98,19 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 자식 노드를 1개만 가진 노드 수를 반환하는 함수
 int countOneChildNodes(BTNode *node)
-
 {
-    /* add your code here */
+    if(node == NULL)
+        return 0;
+
+    int count = 0;
+
+    if((node->left != NULL && node->right == NULL) || 
+    (node->left == NULL && node->right != NULL))
+        count = 1;
+    
+    return count + countOneChildNodes(node->left) + countOneChildNodes(node->right);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

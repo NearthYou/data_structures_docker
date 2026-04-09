@@ -98,7 +98,7 @@ void RecursiveReverse(ListNode **ptrHead)
 
     RecursiveReverse(&nxt);
 
-    nxt->next = cur;
+    cur->next->next = cur;
     cur->next = NULL;
 
     // 시작점
