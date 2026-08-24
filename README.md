@@ -73,7 +73,7 @@ gcc -std=c11 -Wall -Wextra \
 
 ## 테스트
 
-27개 C source를 GCC 14에서 각각 compile해 기본 build 가능 여부를 확인했습니다.
+27개 C source는 GCC 14에서 각각 compile됩니다.
 
 ```bash
 find Data-Structures -name '*.c' -print | while IFS= read -r file; do
