@@ -1,106 +1,93 @@
-# 📘 Docker + VSCode DevContainer 기반 C 개발 환경 구축 가이드
+# CDataStructures
 
-이 문서는 **Windows**와 **macOS** 사용자가 Docker와 VSCode DevContainer 기능을 활용하여 C 개발 및 디버깅 환경을 빠르게 구축할 수 있도록 도와줍니다.
+연결 리스트부터 binary search tree까지 기본 자료구조를 C로 직접 구현한 개인 학습 저장소입니다. 각 문제는 독립된 실행 파일이며 DevContainer에서 compile하고 debugger로 pointer 변화를 확인할 수 있습니다.
 
----
+## 시작한 이유
 
-## 1. Docker란 무엇인가요?
+자료구조를 Python container 사용법으로만 익히지 않고, node 할당과 해제, link 변경, stack과 queue의 상태를 memory 수준에서 이해하려고 시작했습니다. 크래프톤 정글 자료구조 과제를 주제별로 정리했습니다.
 
-**Docker**는 애플리케이션을 어떤 컴퓨터에서든 **동일한 환경에서 실행**할 수 있게 도와주는 **가상화 플랫폼**입니다.  
+## 구현 범위
 
-Docker는 다음 구성요소로 이루어져 있습니다:
+| 주제 | 구현 내용 |
+| --- | --- |
+| Linked List | 삽입, 삭제, 정렬 삽입, 병합과 변형 |
+| Stack과 Queue | push, pop, enqueue, dequeue, 재귀 응용 |
+| Binary Tree | 생성, 순회, 구조 비교, 높이와 node 계산 |
+| Binary Search Tree | 삽입, 탐색, 순회와 tree 변형 |
 
-- **Docker Engine**: 컨테이너를 실행하는 핵심 서비스
-- **Docker Image**: 컨테이너 생성에 사용되는 템플릿 (레시피 📃)
-- **Docker Container**: 이미지를 기반으로 생성된 실제 실행 환경 (요리 🍜)
+## 아키텍처와 코드 구조
 
-### ✅ AWS EC2와의 차이점
+```mermaid
+flowchart TD
+    NODE[ListNode] --> LIST[LinkedList]
+    LIST --> STACK[Stack]
+    LIST --> QUEUE[Queue]
+    TREE[Tree Node] --> TRAVERSAL[재귀와 반복 순회]
+    TREE --> BST[Binary Search Tree]
+    STACK --> TRAVERSAL
+```
 
-| 구분 | EC2 같은 VM | Docker 컨테이너 |
-|------|-------------|-----------------|
-| 실행 단위 | OS 포함 전체 | 애플리케이션 단위 |
-| 실행 속도 | 느림 (수십 초 이상) | 매우 빠름 (거의 즉시) |
-| 리소스 사용 | 무거움 | 가벼움 |
+| 경로 | 내용 |
+| --- | --- |
+| `Data-Structures/Linked_List/` | 단일 연결 리스트 문제 |
+| `Data-Structures/Stack_and_Queue/` | linked list 기반 stack과 queue |
+| `Data-Structures/Binary_Tree/` | 일반 binary tree 문제 |
+| `Data-Structures/Binary_Search_Tree/` | BST 탐색과 순회 문제 |
 
----
+## 문제 해결 과정
 
-## 2. VSCode DevContainer란 무엇인가요?
+### Queue 동작을 linked list 연산으로 통일
 
-**DevContainer**는 VSCode에서 Docker 컨테이너를 **개발 환경**처럼 사용할 수 있게 해주는 기능입니다.
+Queue마다 node 연결 코드를 다시 작성하면 head와 size 갱신 규칙이 달라질 수 있습니다. Queue가 `LinkedList`를 포함하게 만들고 enqueue는 마지막 index 삽입, dequeue는 첫 node 삭제를 사용하도록 연결했습니다.
 
-- 코드를 실행하거나 디버깅할 때 **컨테이너 내부 환경에서 동작**
-- 팀원 간 **환경 차이 없이 동일한 개발 환경 구성** 가능
-- `.devcontainer` 폴더에 정의된 설정을 VSCode가 읽어 자동 구성
+empty queue에서는 head를 읽지 않고 먼저 size를 확인합니다. 모든 node를 비울 때도 최초 size만큼 dequeue해 하나의 삭제 경로를 재사용했습니다.
 
----
+### 재귀 호출 순서로 queue 뒤집기
 
-## 3. Docker Desktop 설치하기
+앞에서 꺼낸 값을 바로 넣으면 순서가 달라지지 않습니다. 한 값을 dequeue한 뒤 남은 queue를 먼저 뒤집고, 호출이 돌아오는 순서에 맞춰 값을 enqueue했습니다.
 
-1. Docker 공식 사이트에서 설치 파일 다운로드:  
-   👉 [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+마지막 값부터 다시 들어가므로 별도의 배열이나 두 번째 queue 없이 기존 queue를 역순으로 만들 수 있습니다. empty 상태를 재귀 종료 조건으로 사용했습니다.
 
-2. 설치 후 Docker Desktop 실행  
-   - Windows: Docker 아이콘이 트레이에 떠야 함  
-   - macOS: 상단 메뉴바에 Docker 아이콘 확인
+### 두 tree의 구조와 값을 함께 비교
 
----
+두 node가 모두 NULL이면 같은 끝점이고 한쪽만 NULL이면 구조가 다릅니다. 두 node가 존재할 때는 현재 값과 왼쪽 subtree, 오른쪽 subtree가 모두 같을 때만 동일한 tree로 판단했습니다.
 
-## 4. 프로젝트 파일 다운로드 (히스토리 없이)
+tree 해제도 같은 재귀 구조를 사용하되 자식을 먼저 해제하고 현재 node를 마지막에 free했습니다. 해제한 root pointer는 NULL로 바꿔 다시 접근하지 않게 했습니다.
 
-터미널(CMD, PowerShell, zsh 등)에서 아래 명령어로 프로젝트 폴더만 내려받습니다:
+### 반복 post-order에서 오른쪽 subtree 보류
+
+post-order는 왼쪽, 오른쪽, root 순서라 stack 하나만 사용하면 오른쪽 subtree 방문 시점을 잃기 쉽습니다. 주 stack에는 탐색 경로를, 보조 stack에는 나중에 방문할 오른쪽 child를 저장했습니다.
+
+현재 node의 오른쪽 child가 보조 stack top과 같으면 오른쪽으로 이동하고, 아니면 현재 node를 출력해 재귀 없이 순서를 유지했습니다.
+
+## 실행 방법
+
+VS Code에서 저장소를 연 뒤 Dev Containers의 `Reopen in Container`를 선택합니다. 각 문제는 독립된 C file이므로 다음처럼 compile합니다.
 
 ```bash
-git clone --depth=1 https://github.com/krafton-jungle/data_structures_docker.git
+gcc -std=c11 -Wall -Wextra \
+  Data-Structures/Stack_and_Queue/Q5_C_SQ.c \
+  -o /tmp/queue_reverse
+/tmp/queue_reverse
 ```
 
-- `--depth=1` 옵션은 git commit 히스토리를 생략하고 **최신 파일만 가져옵니다.**
+## 테스트
 
-### 📂 다운로드 후 폴더 구조 설명
+27개 C source를 GCC 14에서 각각 compile해 기본 build 가능 여부를 확인했습니다.
 
-```
-data_structures_docker/
-├── .devcontainer/
-│   ├── devcontainer.json      # VSCode에서 컨테이너 환경 설정
-│   └── Dockerfile             # C 개발 환경 이미지 정의
-│
-├── .vscode/
-│   ├── launch.json            # 디버깅 설정 (F5 실행용)
-│   └── tasks.json             # 컴파일 자동화 설정
-│
-├── Data-Structures/
-│   ├── Binary_Search_Tree/
-│   ├── Binary_Tree/
-│   ├── Linked_List/
-│   │   ├── Q1_A_LL.c ~ Q7_A_LL.c       # 연결 리스트 문제 C 코드
-│   │   └── Linked Lists Questions.pdf # 문제 설명 문서
-│   └── Stack_and_Queue/
-│       ├── Q1_C_SQ.c ~ Q7_C_SQ.c       # 스택/큐 문제 C 코드
-│       └── Stack and Queues Questions.pdf # 문제 설명 문서
-│
-└── README.md  # 설치 및 사용법 설명 문서
+```bash
+find Data-Structures -name '*.c' -print | while IFS= read -r file; do
+  gcc -std=c11 -Wall -Wextra "$file" -o /tmp/ds-check
+done
 ```
 
-> ✅ 각 디렉터리는 자료구조 주제별로 문제 파일들이 정리되어 있습니다.
+## 남은 과제
 
----
+- `Q5_F_BST.c`의 BST node 삭제 구현
+- 반환값이 빠진 함수와 compiler warning 정리
+- interactive input과 분리된 자동 test runner 추가
 
-## 5. VSCode에서 해당 프로젝트 폴더 열기
+## 관련 프로젝트
 
-1. VSCode를 실행
-2. `파일 → 폴더 열기`로 방금 클론한 `data_structures_docker` 폴더를 선택
----
-
-## 6. 개발 컨테이너: 컨테이너에서 열기
-
-
-1. VSCode에서 `Ctrl+Shift+P` (Windows/Linux) 또는 `Cmd+Shift+P` (macOS)를 누릅니다.
-2. 명령어 팔레트에서 `Dev Containers: Reopen in Container`를 선택합니다.
-3. 이후 컨테이너가 자동으로 실행되고 빌드됩니다. 처음 컨테이너를 열면 빌드하는 시간이 오래걸릴 수 있습니다. 빌드 후, 프로젝트가 **컨테이너 안에서 실행됨**.
-
----
-
-## 7. C 파일에 브레이크포인트 설정 후 디버깅 (F5)
-이제 본격적으로 문제를 풀 시간입니다. `README.md` 파일을 참조하셔서 Linked List -> Stack and Queue -> Binary Tree -> Binary Search Tree 순으로 문제를 풀어보세요. 각 문제 폴더에는 pdf형태로 문제 설명이 있습니다.
-
-C 언어로 문제를 풀다가 디버깅이 필요하시면 소스코드에 BreakPoint를 설정한 뒤에 키보드에서 `F5`를 눌러 디버깅을 시작할 수 있습니다.   
-* 참고로 변수, 메모리, 스택, 출력 등을 VSCode에서 확인할 수도 있습니다.
+- [Algorithms](https://github.com/NearthYou/Algorithms): graph, search, dynamic programming을 Python 문제로 확장한 학습 기록
+- [MemoryAllocator](https://github.com/NearthYou/MemoryAllocator): C pointer와 block metadata를 이용한 동적 할당기

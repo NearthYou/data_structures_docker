@@ -53,3 +53,7 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Exercise binaries without file extensions
+Data-Structures/**/Q[0-9]*
+!Data-Structures/**/*.c
